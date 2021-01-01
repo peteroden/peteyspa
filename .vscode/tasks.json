@@ -8,7 +8,7 @@
         "isBackground": true,
         "dependsOn": "npm install",
         "options": {
-          "cwd": "${workspaceFolder}/test-project/api"
+          "cwd": "${workspaceFolder}/GreatPeople/api"
         }
       },
       {

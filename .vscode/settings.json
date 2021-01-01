@@ -1,12 +1,12 @@
 {
-    "azurite.location": "",
-    "azureFunctions.deploySubpath": "./test-project/api",
+    "azurite.location": "/workspaces/peteyspa/.azurite",
+    "azureFunctions.deploySubpath": "./GreatPeople/api",
     "azureFunctions.postDeployTask": "npm install",
     "azureFunctions.projectLanguage": "JavaScript",
     "azureFunctions.projectRuntime": "~3",
     "debug.internalConsoleOptions": "neverOpen",
     "azureFunctions.preDeployTask": "npm prune",
-    "liveServer.settings.root": "/test-project",
+    "liveServer.settings.root": "/GreatPeople",
     "liveServer.settings.proxy": {
         "enable": true,
         "baseUri": "/api",
