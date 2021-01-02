@@ -5,9 +5,9 @@ namespace api.Models
     public class PersonInfo
     {
         [JsonProperty("id")]
-        public string Email { get; set; }
-        [JsonProperty("email")]
         public string Id { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
         [JsonProperty("firstName")]
         public string FirstName { get; set; }
         [JsonProperty("lastName")]
