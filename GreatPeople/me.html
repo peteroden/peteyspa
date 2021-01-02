@@ -24,7 +24,7 @@
       let text = await( await fetch(`/api/person/`+ myCreds.clientPrincipal.userId)).json();
       document.querySelector('#name').textContent = text.firstName + ' ' + text.lastName;
       document.querySelector('#userInfo').value = text;
-    })
+    }())
 
     async function save() {
         let myCreds = await( await fetch(`/.auth/me`)).json();
