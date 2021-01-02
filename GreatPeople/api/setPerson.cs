@@ -21,6 +21,7 @@ namespace api
             int id,
             ILogger log)
         {
+            // TODO: Only write if clientprincipal's Id is the same as the one being written or has the admin role
             String requestBody = new StreamReader(req.Body).ReadToEnd();
             PersonInfo personInfo = JsonConvert.DeserializeObject<PersonInfo>(requestBody);
             personInfoBlob = JsonConvert.SerializeObject(personInfo);

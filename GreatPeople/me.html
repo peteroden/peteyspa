@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Me - Great People</title>
+</head>
+
+<body>
+  <main>
+    <h1>Great People - Me</h1>
+    <p>Loading content from the API: <b id="name">...</b></p>
+    <form>
+        <textarea rows="25" cols="25" id="userInfo">
+        <input type="submit" onclick="save">
+    </form>
+  </main>
+
+  <script>
+    (async function() {
+      let myCreds = await( await fetch(`/.auth/me`)).json();
+      let text = await( await fetch(`/api/person/`+ mycreds.clientPrincipal.userId)).json();
+      document.querySelector('#name').textContent = text.firstName + ' '+ text.lastName;
+      document.querySelector('#userInfo').value = text;
+    }())
+
+    function save() {
+        fetch('/api/person/'+mycreds.clientPrincipal.userId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+              },
+            body: document.querySelector('#userInfo').value
+        })
+    }
+  </script>
+</body>
+
+</html>

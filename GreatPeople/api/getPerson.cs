@@ -21,6 +21,7 @@ namespace api
             int id,
             ILogger log)
         {
+            // TODO: only throw 403 is user doesn not have users role
             log.LogInformation(personInfoBlob);
             PersonInfo personInfo = JsonConvert.DeserializeObject<PersonInfo>(personInfoBlob);
             return new OkObjectResult(personInfo);
