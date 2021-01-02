@@ -1,16 +1,8 @@
 {
     "routes": [
       {
-        "route": "/admin/*",
-        "allowedRoles": ["administrator"]
-      },
-      {
-        "route": "/",
+        "route": "/*",
         "allowedRoles": ["users"]
-      },
-      {
-        "route": "/customers/contoso",
-        "allowedRoles": ["administrator", "customers_contoso"]
       },
       {
         "route": "/login",
