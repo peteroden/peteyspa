@@ -21,7 +21,7 @@ namespace api
             String id,
             ILogger log)
         {
-            // TODO: only throw 403 is user doesn not have users role
+            // TODO: only throw 403 if user doesn not have users role
             log.LogInformation(personInfoBlob);
             if (personInfoBlob == null)
             {

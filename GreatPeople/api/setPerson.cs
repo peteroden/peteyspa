@@ -1,17 +1,19 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Extensions.Storage;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using api.Models;
-
 namespace api
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.WebJobs;
+    using Microsoft.Azure.WebJobs.Extensions.Http;
+    using Microsoft.Azure.WebJobs.Extensions.Storage;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+    using api.Models;
+
     public static class setPerson
     {
         [FunctionName("setPerson")]
@@ -21,11 +23,22 @@ namespace api
             String id,
             ILogger log)
         {
-            // TODO: Only write if clientprincipal's Id is the same as the one being written or has the admin role
+            ClaimsPrincipal claimsPrincipal = StaticWebAppsAuth.Parse(req);
             String requestBody = new StreamReader(req.Body).ReadToEnd();
             PersonInfo personInfo = JsonConvert.DeserializeObject<PersonInfo>(requestBody);
-            personInfoBlob = JsonConvert.SerializeObject(personInfo);
-            return new OkObjectResult(personInfo);
+
+            bool isSelf = (id == claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value && id == personInfo.Id);
+            bool isAdmin = (claimsPrincipal.IsInRole("administrator"));
+
+            if (isSelf || isAdmin) {
+                personInfoBlob = JsonConvert.SerializeObject(personInfo);
+                return new OkObjectResult(personInfo);
+            }
+            else
+            {
+                personInfoBlob = null;
+                return new UnauthorizedResult();
+            }
         }
     }
 }
