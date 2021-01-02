@@ -18,7 +18,7 @@ namespace api
         public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "person/{id}")] HttpRequest req,
             [Blob("people/{id}.json", FileAccess.Write, Connection = "GreatPeopleStorage")] out String personInfoBlob,
-            int id,
+            String id,
             ILogger log)
         {
             // TODO: Only write if clientprincipal's Id is the same as the one being written or has the admin role

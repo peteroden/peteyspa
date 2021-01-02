@@ -18,13 +18,20 @@ namespace api
         public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "person/{id}")] HttpRequest req,
             [Blob("people/{id}.json", FileAccess.Read, Connection = "GreatPeopleStorage")] String personInfoBlob,
-            int id,
+            String id,
             ILogger log)
         {
             // TODO: only throw 403 is user doesn not have users role
             log.LogInformation(personInfoBlob);
-            PersonInfo personInfo = JsonConvert.DeserializeObject<PersonInfo>(personInfoBlob);
-            return new OkObjectResult(personInfo);
+            if (personInfoBlob == null)
+            {
+                return new NoContentResult();
+            }
+            else
+            {
+                var returnValue = JsonConvert.DeserializeObject<PersonInfo>(personInfoBlob);
+                return new OkObjectResult(returnValue);
+            }
         }
     }
 }
