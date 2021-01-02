@@ -27,7 +27,8 @@
     }())
 
     function save() {
-        fetch('/api/person/'+mycreds.clientPrincipal.userId, {
+        let myCreds = await( await fetch(`/.auth/me`)).json();
+        fetch('/api/person/'+myCreds.clientPrincipal.userId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
