@@ -21,8 +21,8 @@
   <script>
     (async function() {
       let myCreds = await( await fetch(`/.auth/me`)).json();
-      let text = await( await fetch(`/api/person/`+ mycreds.clientPrincipal.userId)).json();
-      document.querySelector('#name').textContent = text.firstName + ' '+ text.lastName;
+      let text = await( await fetch(`/api/person/`+ myCreds.clientPrincipal.userId)).json();
+      document.querySelector('#name').textContent = text.firstName + ' ' + text.lastName;
       document.querySelector('#userInfo').value = text;
     }())
 
