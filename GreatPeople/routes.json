@@ -1,0 +1,39 @@
+{
+    "routes": [
+      {
+        "route": "/admin/*",
+        "allowedRoles": ["administrator"]
+      },
+      {
+        "route": "/",
+        "allowedRoles": ["users"]
+      },
+      {
+        "route": "/customers/contoso",
+        "allowedRoles": ["administrator", "customers_contoso"]
+      },
+      {
+        "route": "/login",
+        "serve": "/.auth/login/aad"
+      },
+      {
+        "route": "/.auth/login/github",
+        "statusCode": "404"
+      },
+      {
+        "route": "/.auth/login/twitter",
+        "statusCode": "404"
+      },
+      {
+        "route": "/logout",
+        "serve": "/.auth/logout"
+      }
+    ],
+    "platformErrorOverrides": [
+      {
+        "errorType": "Unauthenticated",
+        "statusCode": "302",
+        "serve": "/login"
+      }
+    ]
+  }
