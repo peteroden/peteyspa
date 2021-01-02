@@ -3,9 +3,10 @@ using Newtonsoft.Json;
 namespace api.Models
 {
     public class PersonInfo
-        {[JsonProperty("id")]
+    {
+        [JsonProperty("id")]
         public string Email { get; set; }
-        {[JsonProperty("email")]
+        [JsonProperty("email")]
         public string Id { get; set; }
         [JsonProperty("firstName")]
         public string FirstName { get; set; }
