@@ -14,7 +14,7 @@
     <p>Loading content from the API: <b id="name">...</b></p>
     <form>
         <textarea rows="25" cols="25" id="userInfo"></textarea>
-        <input type="submit" onclick="save">
+        <input type="submit" onclick="save()">
     </form>
   </main>
 
@@ -24,11 +24,11 @@
       let text = await( await fetch(`/api/person/`+ myCreds.clientPrincipal.userId)).json();
       document.querySelector('#name').textContent = text.firstName + ' ' + text.lastName;
       document.querySelector('#userInfo').value = text;
-    }())
+    })
 
-    function save() {
+    async function save() {
         let myCreds = await( await fetch(`/.auth/me`)).json();
-        fetch('/api/person/'+myCreds.clientPrincipal.userId, {
+        await fetch('/api/person/'+myCreds.clientPrincipal.userId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
