@@ -16,7 +16,7 @@ namespace api
     {
         [FunctionName("setPerson")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "person/{id:String}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "person/{id}")] HttpRequest req,
             [Blob("people/{id}.json", FileAccess.Write, Connection = "GreatPeopleStorage")] out String personInfoBlob,
             int id,
             ILogger log)
