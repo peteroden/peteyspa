@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
-using Newtonsoft.Json;
 using api.Models;
 
 namespace api
@@ -26,29 +26,46 @@ namespace api
 
             string query = req.Query["query"];
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            query = query ?? data?.name;
+            if (string.IsNullOrEmpty(query))
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                try
+                {
+                    var data = JsonDocument.Parse(requestBody);
+                    query = data.RootElement.GetProperty("query").GetString();
+                } catch (Exception e) {
+                    return new BadRequestObjectResult("No valid query found");
+                }
+            } 
 
             // Get the service endpoint and API key from the environment
             Uri endpoint = new Uri(Environment.GetEnvironmentVariable("SEARCH_ENDPOINT"));
             string key = Environment.GetEnvironmentVariable("SEARCH_API_KEY");
-            string indexName = "people_index";
+            string indexName = "people-index";
 
             // Create a client
             AzureKeyCredential credential = new AzureKeyCredential(key);
             SearchClient client = new SearchClient(endpoint, indexName, credential);
 
-            SearchResults<PersonInfo> response = await client.SearchAsync<PersonInfo>(query);
-            List<PersonInfo> peopleList = new List<PersonInfo>();
-            await foreach (SearchResult<PersonInfo> result in response.GetResultsAsync())
+            log.LogInformation("Query: " + query);
+
+            var options = new SearchOptions()
             {
+                SearchFields = { "firstName", "lastName", "about", "skills"},
+                Select = { "id", "email", "firstName", "lastName", "about", "skills", "lookingFor"}
+            };
+
+            SearchResults<PersonInfo> response = await client.SearchAsync<PersonInfo>(query, options).ConfigureAwait(false);
+            List<PersonInfo> peopleList = new List<PersonInfo>();
+            await foreach (SearchResult<PersonInfo> result in response.GetResultsAsync().ConfigureAwait(false))
+            {
+                log.LogInformation(JsonSerializer.Serialize(result));
                 PersonInfo doc = result.Document;
                 peopleList.Add(doc);
                 log.LogInformation($"{doc.Id}: {doc.Email}");
             }
 
-            string responseMessage = JsonConvert.SerializeObject(peopleList);
+            string responseMessage = JsonSerializer.Serialize(peopleList);
             return new OkObjectResult(responseMessage);
         }
     }

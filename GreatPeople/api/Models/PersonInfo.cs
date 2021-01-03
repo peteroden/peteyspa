@@ -1,22 +1,22 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace api.Models
 {
     public class PersonInfo
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
-        [JsonProperty("firstName")]
+        [JsonPropertyName("firstName")]
         public string FirstName { get; set; }
-        [JsonProperty("lastName")]
+        [JsonPropertyName("lastName")]
         public string LastName { get; set; }
-        [JsonProperty("about")]
+        [JsonPropertyName("about")]
         public string About { get; set; }
-        [JsonProperty("skills")]
+        [JsonPropertyName("skills")]
         public string Skills { get; set; }
-        [JsonProperty("lookingFor")]
+        [JsonPropertyName("lookingFor")]
         public string LookingFor { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -7,7 +8,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using api.Models;
 
 namespace api
@@ -21,7 +21,7 @@ namespace api
             String id,
             ILogger log)
         {
-            // TODO: only throw 403 if user doesn not have users role
+            // TODO: only throw 403 if user doesn't not have users role
             log.LogInformation(personInfoBlob);
             if (personInfoBlob == null)
             {
@@ -29,7 +29,7 @@ namespace api
             }
             else
             {
-                var returnValue = JsonConvert.DeserializeObject<PersonInfo>(personInfoBlob);
+                var returnValue = JsonSerializer.Deserialize<PersonInfo>(personInfoBlob);
                 return new OkObjectResult(returnValue);
             }
         }
