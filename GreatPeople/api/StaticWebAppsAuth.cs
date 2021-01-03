@@ -1,28 +1,20 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-
-namespace api
+namespace Api
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Security.Claims;
+  using System.Text;
+  using Microsoft.AspNetCore.Http;
+  using Newtonsoft.Json;
+
   public static class StaticWebAppsAuth
   {
-    private class ClientPrincipal
-    {
-        public string IdentityProvider { get; set; }
-        public string UserId { get; set; }
-        public string UserDetails { get; set; }
-        public IEnumerable<String> UserRoles { get; set; }
-    }
-
     public static ClaimsPrincipal Parse(HttpRequest req)
     {
         var principal = new ClientPrincipal();
 
-        if (req.Headers.TryGetValue("x-ms-client-principal", out var header))
+        if (req != null && req.Headers.TryGetValue("x-ms-client-principal", out var header))
         {
             var data = header[0];
             var decoded = Convert.FromBase64String(data);
@@ -43,6 +35,17 @@ namespace api
         identity.AddClaims(principal.UserRoles.Select(r => new Claim(ClaimTypes.Role, r)));
 
         return new ClaimsPrincipal(identity);
+    }
+
+    private class ClientPrincipal
+    {
+        public string IdentityProvider { get; set; }
+
+        public string UserId { get; set; }
+
+        public string UserDetails { get; set; }
+
+        public IEnumerable<string> UserRoles { get; set; }
     }
   }
 }

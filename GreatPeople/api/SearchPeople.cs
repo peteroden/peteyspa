@@ -1,20 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Azure;
-using Azure.Search.Documents;
-using Azure.Search.Documents.Models;
-using api.Models;
-
-namespace api
+namespace Api
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text.Json;
+    using System.Threading.Tasks;
+    using Api.Models;
+    using Azure;
+    using Azure.Search.Documents;
+    using Azure.Search.Documents.Models;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.WebJobs;
+    using Microsoft.Azure.WebJobs.Extensions.Http;
+    using Microsoft.Extensions.Logging;
+
     public static class SearchPeople
     {
         [FunctionName("SearchPeople")]
@@ -22,21 +22,26 @@ namespace api
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "people")] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            if (req == null)
+            {
+                return new BadRequestResult();
+            }
 
             string query = req.Query["query"];
 
             if (string.IsNullOrEmpty(query))
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync().ConfigureAwait(false);
                 try
                 {
                     var data = JsonDocument.Parse(requestBody);
                     query = data.RootElement.GetProperty("query").GetString();
-                } catch (Exception e) {
+                }
+                catch (JsonException e)
+                {
                     return new BadRequestObjectResult("No valid query found");
                 }
-            } 
+            }
 
             // Get the service endpoint and API key from the environment
             Uri endpoint = new Uri(Environment.GetEnvironmentVariable("SEARCH_ENDPOINT"));
@@ -51,8 +56,8 @@ namespace api
 
             var options = new SearchOptions()
             {
-                SearchFields = { "firstName", "lastName", "about", "skills"},
-                Select = { "id", "email", "firstName", "lastName", "about", "skills", "lookingFor"}
+                SearchFields = { "firstName", "lastName", "about", "skills" },
+                Select = { "id", "email", "firstName", "lastName", "about", "skills", "lookingFor" },
             };
 
             SearchResults<PersonInfo> response = await client.SearchAsync<PersonInfo>(query, options).ConfigureAwait(false);
