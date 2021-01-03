@@ -16,7 +16,7 @@ namespace api.Models
         public string About { get; set; }
         [JsonPropertyName("skills")]
         public string Skills { get; set; }
-        [JsonPropertyName("lookingFor")]
-        public string LookingFor { get; set; }
+        [JsonPropertyName("interests")]
+        public string Interests { get; set; }
     }
 }
