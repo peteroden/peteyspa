@@ -3,7 +3,7 @@
     "proxies": {
       "indexes": {
         "matchCondition": {
-          "route": "/indexes{therest}"
+          "route": "/api/indexes{therest}"
         },
         "backendUri": "https://%SearchServiceName%.search.windows.net/indexes{therest}",
         "requestOverrides": {

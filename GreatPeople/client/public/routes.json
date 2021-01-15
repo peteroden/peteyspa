@@ -5,6 +5,11 @@
         "allowedRoles": ["users"]
       },
       {
+        "route": "/indexes{therest}",
+        "allowedRoles": ["users"],
+        "serve": "/api/indexes{therest}"
+      },
+      {
         "route": "/login",
         "serve": "/.auth/login/aad"
       },
