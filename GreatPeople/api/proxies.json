@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+      "indexes": {
+        "matchCondition": {
+          "route": "/indexes{therest}"
+        },
+        "backendUri": "https://%SearchServiceName%.search.windows.net/indexes{therest}",
+        "requestOverrides": {
+          "backend.request.headers.api-key": "%SearchApiKey%"
+        }
+      }
+    }
+  }
+  
