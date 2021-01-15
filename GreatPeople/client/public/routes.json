@@ -1,0 +1,36 @@
+{
+    "routes": [
+      {
+        "route": "/api/person/*",
+        "allowedRoles": ["users"]
+      },
+      {
+        "route": "/indexes{therest}",
+        "allowedRoles": ["users"],
+        "serve": "/api/indexes{therest}"
+      },
+      {
+        "route": "/login",
+        "serve": "/.auth/login/aad"
+      },
+      {
+        "route": "/.auth/login/github",
+        "statusCode": "404"
+      },
+      {
+        "route": "/.auth/login/twitter",
+        "statusCode": "404"
+      },
+      {
+        "route": "/logout",
+        "serve": "/.auth/logout"
+      }
+    ],
+    "platformErrorOverrides": [
+      {
+        "errorType": "Unauthenticated",
+        "statusCode": "302",
+        "serve": "/login"
+      }
+    ]
+  }
